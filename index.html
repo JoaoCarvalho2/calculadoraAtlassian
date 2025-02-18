@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Jira</title>
+    <link rel="stylesheet" href="styles.css"> 
+</head>
+<body>
+    <h1>Calculadora Jira</h1>
+    <p>Digite um número entre 1 e 100:</p>
+    <input type="number" id="numeroEscolhido" min="1" max="100" placeholder="Digite um número">
+
+    <p>Selecione o tipo de Jira:</p>
+    <select id="tipoJira">
+        <option value="standard">Standard</option>
+        <option value="premium">Premium</option>
+    </select>
+
+
+    <p>Selecione o nível de parceria:</p>
+<select id="desconto">
+    <option value="none">Nenhum</option>
+    <option value="silver">Silver (10% de desconto)</option>
+    <option value="gold">Gold (20% de desconto)</option>
+    <option value="platinum">Platinum (25% de desconto)</option>
+</select>
+
+<button onclick="calcularDesconto()">Calcular</button>
+
+<p id="resultado"></p>
+
+    <div id="resultado"></div>
+
+    <script src="index.js"></script> 
+</body>
+</html>
