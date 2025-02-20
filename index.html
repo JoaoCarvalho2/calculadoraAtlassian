@@ -3,35 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Jira</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <title>Calculadora de Produtos</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Adicione seu arquivo CSS aqui -->
 </head>
 <body>
-    <h1>Calculadora Jira</h1>
-    <p>Digite um número entre 1 e 100:</p>
-    <input type="number" id="numeroEscolhido" min="1" max="100" placeholder="Digite um número">
-
-    <p>Selecione o tipo de Jira:</p>
-    <select id="tipoJira">
-        <option value="standard">Standard</option>
-        <option value="premium">Premium</option>
-    </select>
-
+    <h1>Calculadora de Produtos</h1>
 
     <p>Selecione o nível de parceria:</p>
-<select id="desconto">
-    <option value="none">Nenhum</option>
-    <option value="silver">Silver (10% de desconto)</option>
-    <option value="gold">Gold (20% de desconto)</option>
-    <option value="platinum">Platinum (25% de desconto)</option>
-</select>
+    <select id="desconto">
+        <option value="none">Nenhum</option>
+        <option value="silver">Silver (10% de desconto)</option>
+        <option value="gold">Gold (20% de desconto)</option>
+        <option value="platinum">Platinum (25% de desconto)</option>
+    </select>
 
-<button onclick="calcularDesconto()">Calcular</button>
+    <h2>Produtos:</h2>
+    <div id="produtos">
+        <!-- Cada produto terá um campo para selecionar Standard/Premium, quantidade e exibir o valor -->
+        <div class="produto">
+            <label>
+                <input type="checkbox" id="jira"> Jira
+                <select class="tipo">
+                    <option value="standard">Standard</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+            </label>
+            <span class="valor">$ 0.00</span>
+        </div>
+        <div class="produto">
+            <label>
+                <input type="checkbox" id="jsm"> JSM
+                <select class="tipo">
+                    <option value="standard">Standard</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+            </label>
+            <span class="valor">$ 0.00</span>
+        </div>
+        
+        <div class="produto">
+            <label>
+                <input type="checkbox" id="confluence"> Confluence
+                <select class="tipo">
+                    <option value="standard">Standard</option>
+                    <option value="premium">Premium</option>
+                </select>
+                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+            </label>
+            <span class="valor">$ 0.00</span>
+        </div>
+    </div>
 
-<p id="resultado"></p>
+    <button onclick="calcularProdutos()">Calcular</button>
 
-    <div id="resultado"></div>
+    <h3>Valor Total:</h3>
+    <p id="valorTotalDolar">$ 0.00</p>
+    <p id="valorTotalReal">R$ 0.00</p>
 
-    <script src="index.js"></script> 
+    <script src="index.js"></script> <!-- Adicione seu arquivo JavaScript aqui -->
 </body>
 </html>
