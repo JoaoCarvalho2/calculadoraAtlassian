@@ -8,59 +8,69 @@
 </head>
 <body>
     <h1>Calculadora de Produtos</h1>
-
-    <p>Selecione o nível de parceria:</p>
-    <select id="desconto">
-        <option value="none">Nenhum</option>
-        <option value="silver">Silver (10% de desconto)</option>
-        <option value="gold">Gold (20% de desconto)</option>
-        <option value="platinum">Platinum (25% de desconto)</option>
-    </select>
-
-    <h2>Produtos:</h2>
-    <div id="produtos">
-        <!-- Cada produto terá um campo para selecionar Standard/Premium, quantidade e exibir o valor -->
-        <div class="produto">
-            <label>
-                <input type="checkbox" id="jira"> Jira
-                <select class="tipo">
-                    <option value="standard">Standard</option>
-                    <option value="premium">Premium</option>
-                </select>
-                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-            </label>
-            <span class="valor">$ 0.00</span>
-        </div>
-        <div class="produto">
-            <label>
-                <input type="checkbox" id="jsm"> JSM
-                <select class="tipo">
-                    <option value="standard">Standard</option>
-                    <option value="premium">Premium</option>
-                </select>
-                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-            </label>
-            <span class="valor">$ 0.00</span>
-        </div>
+    <div class="parceria">
+        <p>Selecione o nível de parceria:</p>
+        <select id="desconto">
+            <option value="none">Nenhum</option>
+            <option value="silver">Silver (10% de desconto)</option>
+            <option value="gold">Gold (20% de desconto)</option>
+            <option value="platinum">Platinum (25% de desconto)</option>
+        </select>
         
-        <div class="produto">
-            <label>
-                <input type="checkbox" id="confluence"> Confluence
-                <select class="tipo">
-                    <option value="standard">Standard</option>
-                    <option value="premium">Premium</option>
-                </select>
-                <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-            </label>
-            <span class="valor">$ 0.00</span>
+        <h2>Produtos:</h2>
+        <div id="produtos">
+            <!-- Cada produto terá um campo para selecionar Standard/Premium, quantidade e exibir o valor -->
+            <div class="produto">
+                <label>
+                    <input type="checkbox" id="jira"> Jira
+                    <select class="tipo">
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+                </label>
+                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
+                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
+            </div>
+            <div class="produto">
+                <label>
+                    <input type="checkbox" id="jsm"> JSM
+                    <select class="tipo">
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+                </label>
+                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
+                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
+            </div>
+            <div class="produto">
+                <label>
+                    <input type="checkbox" id="confluence"> Confluence
+                    <select class="tipo">
+                        <option value="standard">Standard</option>
+                        <option value="premium">Premium</option>
+                    </select>
+                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
+                </label>
+                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
+                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
+            </div>
+            <br><button onclick="calcularProdutos()">Calcular</button>
         </div>
     </div>
-
-    <button onclick="calcularProdutos()">Calcular</button>
+    
 
     <h3>Valor Total:</h3>
-    <p id="valorTotalDolar">$ 0.00</p>
-    <p id="valorTotalReal">R$ 0.00</p>
+    <p id="valorTotalDolar">O valor total em dólar é: $ 0.00</p>
+    <p id="valorTotalReal">O valor total em reais é: R$ 0.00</p>
+    <p id="taxaPTAX">O valor do dólar é: R$</p>
+
+    <h3>Adicionar Margem:</h3>
+    <label for="margem">Margem (%):</label>
+    <input type="number" id="margem" placeholder="Insira a margem">
+    <button id="calcularMargem">Calcular Margem</button>
+    <p id="valorfinal">Valor com margem: R$ 0.00</p>
 
     <script src="index.js"></script> <!-- Adicione seu arquivo JavaScript aqui -->
 </body>

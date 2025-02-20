@@ -3,7 +3,11 @@ document.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
     checkbox.addEventListener("change", () => {
         const quantidadeInput = checkbox.parentElement.querySelector(".quantidade");
         quantidadeInput.disabled = !checkbox.checked;
-        if (!checkbox.checked) quantidadeInput.value = ""; // Limpa o valor se desmarcado
+        if (!checkbox.checked) {
+            quantidadeInput.value = ""; // Limpa o valor se desmarcado
+            checkbox.parentElement.querySelector(".valor-bruto").textContent = "$ 0.00"; // Reseta o valor bruto
+            checkbox.parentElement.querySelector(".valor").textContent = "$ 0.00"; // Reseta o valor com desconto
+        }
     });
 });
 
@@ -65,9 +69,14 @@ const produtos = {
 
 // Função para obter a taxa de câmbio PTAX do Banco Central
 async function getPTAX() {
-    const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.10813/dados/ultimos/1?formato=json');
-    const data = await response.json();
-    return parseFloat(data[0].valor);
+    try {
+        const response = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.10813/dados/ultimos/1?formato=json');
+        const data = await response.json();
+        return parseFloat(data[0].valor);
+    } catch (error) {
+        console.error("Erro ao obter a taxa PTAX:", error);
+        return 5.0; // Valor padrão em caso de erro
+    }
 }
 
 // Função principal para calcular os produtos
@@ -90,7 +99,8 @@ async function calcularProdutos() {
         const checkbox = produtoDiv.querySelector('input[type="checkbox"]');
         const tipo = produtoDiv.querySelector(".tipo").value;
         const quantidadeInput = produtoDiv.querySelector(".quantidade");
-        const valorSpan = produtoDiv.querySelector(".valor");
+        const valorBrutoSpan = produtoDiv.querySelector(".valor-bruto"); // Span para o valor bruto
+        const valorSpan = produtoDiv.querySelector(".valor"); // Span para o valor com desconto
 
         if (checkbox.checked && quantidadeInput.value) {
             const quantidadeUsuarios = parseInt(quantidadeInput.value);
@@ -107,22 +117,59 @@ async function calcularProdutos() {
                 }
             }
 
-            // Aplica o desconto
+            // Exibe o valor bruto ao lado do produto
+            valorBrutoSpan.textContent = `$ ${valorBruto.toFixed(2)}`;
+
+            // Aplica o desconto apenas para o cálculo do total
             const valorComDesconto = valorBruto * desconto;
             valorTotalDolar += valorComDesconto;
 
-            // Exibe o valor ao lado do produto
+            // Exibe o valor com desconto (opcional, se necessário)
             valorSpan.textContent = `$ ${valorComDesconto.toFixed(2)}`;
         } else {
-            valorSpan.textContent = "$ 0.00"; // Reseta o valor se não estiver selecionado
+            // Reseta os valores se não estiver selecionado
+            valorBrutoSpan.textContent = "$ 0.00";
+            valorSpan.textContent = "$ 0.00";
         }
     });
 
     // Exibe o valor total em dólar
-    document.getElementById("valorTotalDolar").textContent = `$ ${valorTotalDolar.toFixed(2)}`;
+    document.getElementById("valorTotalDolar").textContent = `O valor total em dólar é: $ ${valorTotalDolar.toFixed(2)}`;
 
     // Obtém a taxa PTAX e converte para real
     const taxaPTAX = await getPTAX();
     const valorTotalReal = valorTotalDolar * taxaPTAX;
-    document.getElementById("valorTotalReal").textContent = `R$ ${valorTotalReal.toFixed(2)}`;
+    document.getElementById("valorTotalReal").textContent = `O valor total em real é: R$ ${valorTotalReal.toFixed(2)}`;
+    document.getElementById("taxaPTAX").textContent = `O valor do dólar é: $ ${taxaPTAX.toFixed(2)}`;
 }
+
+ /*   function valormargem() {
+        var valor = document.getElementById("valor").value;
+        var margem = document.getElementById("margem").value;
+        var valorfinal = parseFloat(valor) + (parseFloat(valor) * parseFloat(margem) / 100);
+        document.getElementById("valorfinal").value = valorfinal.toFixed
+}
+*/
+    // Função para calcular o valor final com margem
+    function valormargem() {
+        const valor = parseFloat(document.getElementById("valorTotalReal").textContent.replace("O valor total em real é: R$ ", ""));
+        const margem = parseFloat(document.getElementById("margem").value);
+        const impostos = 12.857142; // 12.15%
+    
+        if (isNaN(valor)) {
+            alert("Por favor, calcule o valor total em reais primeiro.");
+            return;
+        }
+    
+        if (isNaN(margem)) {
+            alert("Por favor, insira uma margem válida.");
+            return;
+        }
+    
+        const margemEImpostos = margem + impostos;
+        const valorfinal = valor * (1 + margemEImpostos / 100);
+        document.getElementById("valorfinal").textContent = `Valor com margem e impostos: R$ ${valorfinal.toFixed(2)}`;
+    }
+    
+    // Adiciona um evento de clique ao botão de calcular margem
+    document.getElementById("calcularMargem").addEventListener("click", valormargem);
