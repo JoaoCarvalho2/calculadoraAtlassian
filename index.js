@@ -239,6 +239,7 @@ document.getElementById("calcularMargem").addEventListener("click", valormargem)
 // Adiciona um evento de clique ao campo do dólar para torná-lo editável
 document.getElementById("taxaPTAX").addEventListener("click", () => {
     tornarCampoDolarEditavel();
+   
 });
 
 // Função para tornar o campo do dólar editável
@@ -246,7 +247,10 @@ function tornarCampoDolarEditavel() {
     const taxaPTAXElement = document.getElementById("taxaPTAX");
     const taxaDolarInput = document.createElement("input");
     taxaDolarInput.type = "number";
-    taxaDolarInput.value = taxaDolar.toFixed(2); // Valor atual do dólar
+ 
+    
+
+    taxaDolarInput.value = Number(taxaDolar).toFixed(2); // Valor atual do dólar
     taxaDolarInput.style.width = "80px"; // Ajuste o tamanho conforme necessário
 
     // Substitui o texto pelo campo de entrada
