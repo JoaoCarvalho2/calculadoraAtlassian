@@ -4,74 +4,186 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Calculadora de Produtos</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Adicione seu arquivo CSS aqui -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <h1>Calculadora de Produtos</h1>
-    <div class="parceria">
-        <p>Selecione o nível de parceria:</p>
-        <select id="desconto">
-            <option value="none">Nenhum</option>
-            <option value="silver">Silver (10% de desconto)</option>
-            <option value="gold">Gold (20% de desconto)</option>
-            <option value="platinum">Platinum (25% de desconto)</option>
-        </select>
-        
-        <h2>Produtos:</h2>
-        <div id="produtos">
-            <!-- Cada produto terá um campo para selecionar Standard/Premium, quantidade e exibir o valor -->
-            <div class="produto">
-                <label>
-                    <input type="checkbox" id="jira"> Jira
-                    <select class="tipo">
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
-                    </select>
-                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-                </label>
-                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
-                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
+<body onload="">
+    <!-- Modal -->
+    <div class="modal fade" id="welcomeModal" tabindex="-1" aria-labelledby="welcomeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="welcomeModalLabel">Bem-vindo à Calculadora de Produtos!</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Este é um sistema para calcular o custo de produtos com base em diferentes cenários. Sinta-se à vontade para explorar e utilizar as funcionalidades disponíveis.</p>
+                    <br>
+                    <p>Este modelo apresenta produtos da empresa atlassian com valores de licenciamento anual, os valores dos produtos foram atualizados 26/02/2025 podendo ter diferenças entre os anos.</p>
+                    <br>
+                    <p>O cálculo de margem é feito de forma diferente, pois inclui valores adicionais, como nota fiscal e outros impostos sendo ele 0/7 para 30% e assim subsequentemente. Caso precise do cálculo de margem correto, pegue o valor em reais ou dólares e faça o cálculo normalmente.</p>
+                    <br>
+                    <p>OOs produtos personalizados estão disponíveis apenas em dólares. Você pode adicionar ADD-ONS do mercado da Atlassian, mas lembre-se de que nem todos os ADD-ONS estão incluídos no sistema de desconto, podendo haver divergências nos valores. Pode achar os valores dos ADD-ONS aqui: https://www.atlassian.com/software/pricing-calculator</p>
+                    <br>
+                    <p>O campo dólar pega o valor atual usando a PTAX do Banco Central do Brasil. No entanto, ele pode ser editado clicando no valor, caso precise adicionar variação cambial ou por qualquer outro motivo.</p>
+                    <br>
+                    <p>Os tiers estão adicionado apenas até o tier 3000 de usuários caso ultrapasse você pode pegar o valor no site: https://www.atlassian.com/software/pricing-calculator adicionar no produto personalizado e realizar o calculo normalmente.</p>
+                    <br>
+                    <p>Caso queira pode me seguir no github: github.com/JoaoCarvalho2</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
+                </div>
             </div>
-            <div class="produto">
-                <label>
-                    <input type="checkbox" id="jsm"> JSM
-                    <select class="tipo">
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
-                    </select>
-                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-                </label>
-                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
-                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
-            </div>
-            <div class="produto">
-                <label>
-                    <input type="checkbox" id="confluence"> Confluence
-                    <select class="tipo">
-                        <option value="standard">Standard</option>
-                        <option value="premium">Premium</option>
-                    </select>
-                    <input type="number" class="quantidade" min="1" max="100" placeholder="Usuários" disabled>
-                </label>
-                <span class="valor-bruto">$ 0.00</span> <!-- Novo span para o valor bruto -->
-                <span class="valor">$ 0.00</span> <!-- Span para o valor com desconto -->
-            </div>
-            <br><button onclick="calcularProdutos()">Calcular</button>
         </div>
     </div>
-    
-    <div class="resultado">
-        <h3>Valor Total:</h3>
-        <p id="valorTotalDolar">O valor total em dólar é: $ 0.00</p>
-        <p id="valorTotalReal">O valor total em real é: R$ 0.00</p>
-        <p id="taxaPTAX">O valor do dólar é: R$</p>
 
-        <h3>Adicionar Margem:</h3>
-        <label for="margem">Margem (%):</label>
-        <input type="number" id="margem" placeholder="Insira a margem">
-        <button class="buton" id="calcularMargem">Calcular Margem</button>
-        <p id="valorfinal">Valor com margem: R$ 0.00</p>
+    <div class="container">
+        <h1>Calculadora de Produtos</h1>
+        
+        <!-- Container para cenários -->
+        <div class="cenarios-container">
+            <!-- Cenário inicial -->
+            <div class="cenario">
+                <h2>Cenário 1</h2>
+                <div class="parceria">
+                    <p>Selecione o nível de parceria:</p>
+                    <select class="desconto">
+                        <option value="none">Nenhum</option>
+                        <option value="silver">Silver (10% de desconto)</option>
+                        <option value="gold">Gold (20% de desconto)</option>
+                        <option value="platinum">Platinum (25% de desconto)</option>
+                    </select>
+                
+                    <h3>Produtos:</h3>
+                    <div class="produtos">
+                        <!-- Jira -->
+                        <div class="produto">
+                            <label>
+                                <input type="checkbox" class="jira"> Jira
+                                <select class="tipo" onchange="verificarEnterprise(this)">
+                                    <option value="standard">Standard</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="enterprise">Enterprise</option>
+                                </select>
+                                <input type="number" class="quantidade" min="1" max="1000" placeholder="Usuários" disabled>
+                            </label>
+                            <span class="tier"></span>
+                            <span class="valor-bruto">$ 0.00</span>
+                            <span class="valor">$ 0.00</span>
+                        </div>
+                        
+                        <!-- Jira Service Management -->
+                        <div class="produto">
+                            <label>
+                                <input type="checkbox" class="jsm"> Jira Service Management
+                                <select class="tipo" onchange="verificarEnterprise(this)">
+                                    <option value="standard">Standard</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="enterprise">Enterprise</option>
+                                </select>
+                                <input type="number" class="quantidade" min="1" max="1000" placeholder="Usuários" disabled>
+                            </label>
+                            <span class="tier"></span>
+                            <span class="valor-bruto">$ 0.00</span>
+                            <span class="valor">$ 0.00</span>
+                        </div>
+                        
+                        <!-- Confluence -->
+                        <div class="produto">
+                            <label>
+                                <input type="checkbox" class="confluence"> Confluence
+                                <select class="tipo" onchange="verificarEnterprise(this)">
+                                    <option value="standard">Standard</option>
+                                    <option value="premium">Premium</option>
+                                    <option value="enterprise">Enterprise</option>
+                                </select>
+                                <input type="number" class="quantidade" min="1" max="1000" placeholder="Usuários" disabled>
+                            </label>
+                            <span class="tier"></span>
+                            <span class="valor-bruto">$ 0.00</span>
+                            <span class="valor">$ 0.00</span>
+                        </div>
+                        <div class="produto">
+                            <label>
+                                <input type="checkbox" class="bitbucket"> Bitbucket
+                                <select class="tipo">
+                                    <option value="premium">Premium</option>
+                                </select>
+                                <input type="number" class="quantidade" min="1" max="1000" placeholder="Usuários" disabled>
+                            </label>
+                            <span class="tier"></span>
+                            <span class="valor-bruto">$ 0.00</span>
+                            <span class="valor">$ 0.00</span>
+                        </div>
+                        
+                        <!-- Container para produtos personalizados -->
+                        <div class="produtos-personalizados"></div>
+                    </div>
+                    
+                    <!-- Botões -->
+                    <div class="botoes-container">
+                        <button onclick="adicionarNovoProduto(this)">Adicionar Novo Produto</button>
+                        <br>
+                        <button onclick="calcularCenario(this)">Calcular</button>
+                    </div>
+                </div>
+                
+                <div class="resultado">
+                    <h3>Valor Total:</h3>
+                    <p class="valorTotalDolar">O valor total em dólar é: $ 0.00</p>
+                    <p class="valorTotalReal">O valor total em real é: R$ 0.00</p>
+                    <p class="taxaPTAX">O valor do dólar é: R$</p>
+
+                    <!-- Adicionar Margem -->
+                    <h3>Adicionar Margem:</h3>
+                    <label for="margem">Margem (%):</label>
+                    <input type="number" class="margem" placeholder="Insira a margem">
+                    <br>
+                    <button class="buton" onclick="calcularMargem(this)">Calcular Margem</button>
+                    <p class="valorfinal">Valor com margem: R$ 0.00</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botão para adicionar novo cenário -->
+        <button class="botao-adicionar" onclick="adicionarNovoCenario()">Adicionar Cenário</button>
+        
+        <!-- Comparação -->
+        <div class="comparacao">
+            <h3>Comparação de Cenários</h3>
+            <button class="botao-comparar" onclick="compararCenarios()">Comparar Cenários</button>
+            <div id="resultado-comparacao">
+                <!-- Resultado da comparação aparecerá aqui -->
+            </div>
+        </div>
     </div>
-    <script src="index.js"></script> <!-- Adicione seu arquivo JavaScript aqui -->
+
+    <!-- Bootstrap JS e dependências -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+    <script>
+        // Exibe o modal automaticamente ao carregar a página
+        window.onload = function() {
+            const welcomeModal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            welcomeModal.show();
+        };
+
+        function verificarEnterprise(select) {
+            if (select.value === "enterprise") {
+                if (!localStorage.getItem('avisoEnterpriseExibido')) {
+                    alert("A opção Enterprise tem um mínimo de 801 usuários para Jira e Confluence e 201 para Jira Service Management.");
+                    localStorage.setItem('avisoEnterpriseExibido', 'true');
+                }
+            }
+        }
+
+        // Opcional: Limpar o localStorage ao recarregar a página
+        window.addEventListener('beforeunload', function() {
+            localStorage.removeItem('avisoEnterpriseExibido');
+        });
+    </script>
+    <script src="index.js"></script>
 </body>
 </html>
